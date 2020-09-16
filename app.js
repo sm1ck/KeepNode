@@ -19,16 +19,15 @@ const punishmentBox = document.querySelector('.punishmentBox');
 const err = document.querySelector('.errmsg');
 
 // much thanks https://gist.github.com/knarz for share keep contacts addresses
-const keepTokenAddr = '0x343d3dda00415289cdd4e8030f63a4a5a2548ff9';
-const tokenStakingAddr = '0x234d2182B29c6a64ce3ab6940037b5C8FdAB608e';
-const beaconOperatorAddr = '0xC8337a94a50d16191513dEF4D1e61A6886BF410f';
-const ecdsaFactoryAddr = '0x9EcCf03dFBDa6A5E50d7aBA14e0c60c2F6c575E6';
-const tBTCSortionAddr = '0x20F1f14a42135d3944fEd1AeD2bE13b01c152054';
-const keepBondingAddr = '0x60535A59B4e71F908f3fEB0116F450703FB35eD8';
-const beaconStatisticsAddr = '0xe5984A30a5DBaF1FfF818A57dD5f30D74a8dfaBf';
-const tBTCTokenAddr = '0x7c07C42973047223F80C4A69Bb62D5195460Eb5F';
-const tBTCSystemAddr = '0xc3f96306eDabACEa249D2D22Ec65697f38c6Da69';
-const bondedECDSAFactoryAddr = '0x9eccf03dfbda6a5e50d7aba14e0c60c2f6c575e6';
+var keepTokenAddr = '0x343d3dda00415289cdd4e8030f63a4a5a2548ff9';
+var tokenStakingAddr = '0x234d2182B29c6a64ce3ab6940037b5C8FdAB608e';
+var beaconOperatorAddr = '0xC8337a94a50d16191513dEF4D1e61A6886BF410f';
+var bondedECDSAFactoryAddr = '0x9eccf03dfbda6a5e50d7aba14e0c60c2f6c575e6';
+var tBTCSortionAddr = '0x20F1f14a42135d3944fEd1AeD2bE13b01c152054';
+var keepBondingAddr = '0x60535A59B4e71F908f3fEB0116F450703FB35eD8';
+var beaconStatisticsAddr = '0xe5984A30a5DBaF1FfF818A57dD5f30D74a8dfaBf';
+var tBTCTokenAddr = '0x7c07C42973047223F80C4A69Bb62D5195460Eb5F';
+var tBTCSystemAddr = '0xc3f96306eDabACEa249D2D22Ec65697f38c6Da69';
 
 var web3, addr, operatorsList, totalScore, minUnbonded, minStake, isPunishment, isMobile, keepTokenAbi, tokenStakingAbi, keepBondingAbi, beaconOperatorAbi, beaconStatisticsAbi, tBTCTokenAbi, tBTCSystemAbi, bondedECDSAFactoryAbi, bondedSortitionPoolAbi;
 
@@ -81,6 +80,20 @@ const isSameEthAddress = (address1, address2) => {
         web3.utils.toChecksumAddress(address1) ===
         web3.utils.toChecksumAddress(address2)
     )
+}
+
+// Mainnet deployed!
+
+function changeToMainnet() {
+    keepTokenAddr = '0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC';
+    tokenStakingAddr = '0x1293a54e160d1cd7075487898d65266081a15458';
+    beaconOperatorAddr = '0xdF708431162Ba247dDaE362D2c919e0fbAfcf9DE';
+    bondedECDSAFactoryAddr = '0x9eccf03dfbda6a5e50d7aba14e0c60c2f6c575e6';
+    tBTCSortionAddr = '0x4b558ff45f08198e00cc13de2ccefb9998e0290e';
+    keepBondingAddr = '0x27321f84704a599aB740281E285cc4463d89A3D5';
+    beaconStatisticsAddr = '0x3975CE253fF9d586cF08C3898f95064b7a5718E7';
+    tBTCTokenAddr = '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa';
+    tBTCSystemAddr = '0xe20A5C79b39bC8C363f0f49ADcFa82C2a01ab64a';
 }
 
 // get account from click
@@ -437,6 +450,16 @@ function error(msg) {
     }, 10000);
 }
 
+// info msg to top page
+
+function info(msg) {
+    err.innerHTML = '<div class="alert alert-info" role="alert"><strong>Attention!</strong> '+msg+'</div>';
+    err.style.display = 'block';
+    setTimeout(() => {
+        err.style.display = 'none';
+    }, 10000);
+}
+
 // reload html to awaiting load data
 
 function loader() {
@@ -506,163 +529,163 @@ function loadALL() {
     }
     // accurate check current network
     web3.eth.net.getNetworkType().then(t => {
-        if (t != "ropsten") {
-            error("Please, change network to \"Ropsten\"!");
-        } else {
-            minUnbonded = 0;
-            totalScore = 100;
-            isPunishment = false;
-            punishmentBox.innerHTML = "";
-            // show html via css
-            mainapp.style.display = 'block';
-            score.style.display = 'block';
-            // finish timer
-            var timerId = setInterval(() => {
-                var selection = document.querySelector('.loader-img') === null;
-                if (selection) {
-                    if (totalScore >= 80) {
-                        // green
-                        score.innerHTML = scoreGreen();
-                    } else if (totalScore >= 50) {
-                        // orange
-                        score.innerHTML = scoreOrange();
-                    } else {
-                        // red
-                        score.innerHTML = scoreRed();
-                    }
-                    var bar = new ldBar(
-                        ".ldBar", {
-                        "stroke": '#f00',
-                        "stroke-width": 5,
-                        "stroke-dir": 'reverse',
-                        "preset": "circle",
-                        "value": totalScore
-                    });
-                    clearInterval(timerId);
-                }
-            }, 500);
-            web3.eth.getBalance(addr, function(err, balance) {
-                if (!err) {
-                    var bal = web3.utils.fromWei(balance);
-                    showETH.innerHTML = (parseInt(bal * 100) / 100)+printETH();
-                    if (bal == 0) {
-                        createNodePunishment("Low ETH wallet balance", "You need to top up your wallet with Ether. Ether may be needed for some operations, and so on.", 5, "info");
-                    }
+        if (t == "main") {
+            changeToMainnet();
+            info("If you participate in PFK and you need to check the node in the testnet, please switch to \"Ropsten!\"");
+        }
+        minUnbonded = 0;
+        totalScore = 100;
+        isPunishment = false;
+        punishmentBox.innerHTML = "";
+        // show html via css
+        mainapp.style.display = 'block';
+        score.style.display = 'block';
+        // finish timer
+        var timerId = setInterval(() => {
+            var selection = document.querySelector('.loader-img') === null;
+            if (selection) {
+                if (totalScore >= 80) {
+                    // green
+                    score.innerHTML = scoreGreen();
+                } else if (totalScore >= 50) {
+                    // orange
+                    score.innerHTML = scoreOrange();
                 } else {
-                    error(err);
+                    // red
+                    score.innerHTML = scoreRed();
+                }
+                var bar = new ldBar(
+                    ".ldBar", {
+                    "stroke": '#f00',
+                    "stroke-width": 5,
+                    "stroke-dir": 'reverse',
+                    "preset": "circle",
+                    "value": totalScore
+                });
+                clearInterval(timerId);
+            }
+        }, 500);
+        web3.eth.getBalance(addr, function(err, balance) {
+            if (!err) {
+                var bal = web3.utils.fromWei(balance);
+                showETH.innerHTML = (parseInt(bal * 100) / 100)+printETH();
+                if (bal == 0) {
+                    createNodePunishment("Low ETH wallet balance", "You need to top up your wallet with Ether. Ether may be needed for some operations, and so on.", 5, "info");
+                }
+            } else {
+                error(err);
+            }
+        });
+        // now use only one operator to check node
+        operatorsList = [addr];
+        loadJSON("/contracts/KeepToken.json", function ( data ) {
+            keepTokenAbi = new web3.eth.Contract(data, keepTokenAddr);
+            getTokensAmount(addr, keepTokenAbi).then(t => {
+                showAccount.innerHTML = t+printKEEP();
+            });
+        });
+        loadJSON("/contracts/TokenStaking.json", function ( data ) {
+            tokenStakingAbi = new web3.eth.Contract(data, tokenStakingAddr);
+            sequenceOperators();
+            isAuthorized(addr, beaconOperatorAddr).then(t => {
+                showAuthBeacon.innerHTML = t ? printOK() : printDeny();
+                if (!t) {
+                    createNodePunishment("Authorized required", "You need to authorize RandomBeaconOperator contract for Random Beacon Node on <a href='https://dashboard.test.keep.network/applications/random-beacon' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
                 }
             });
-            // now use only one operator to check node
-            operatorsList = [addr];
-            loadJSON("/contracts/KeepToken.json", function ( data ) {
-                keepTokenAbi = new web3.eth.Contract(data, keepTokenAddr);
-                getTokensAmount(addr, keepTokenAbi).then(t => {
-                    showAccount.innerHTML = t+printKEEP();
-                });
+            isAuthorized(addr, bondedECDSAFactoryAddr).then(t => {
+                showAuthECDSA.innerHTML = t ? printOK() : printDeny();
+                if (!t) {
+                    createNodePunishment("Authorized required", "You need to authorize BondedECDSAKeepFactory contract for ECDSA Node on <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
+                }
             });
-            loadJSON("/contracts/TokenStaking.json", function ( data ) {
-                tokenStakingAbi = new web3.eth.Contract(data, tokenStakingAddr);
-                sequenceOperators();
-                isAuthorized(addr, beaconOperatorAddr).then(t => {
-                    showAuthBeacon.innerHTML = t ? printOK() : printDeny();
-                    if (!t) {
-                        createNodePunishment("Authorized required", "You need to authorize RandomBeaconOperator contract for Random Beacon Node on <a href='https://dashboard.test.keep.network/applications/random-beacon' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
-                    }
-                });
-                isAuthorized(addr, ecdsaFactoryAddr).then(t => {
-                    showAuthECDSA.innerHTML = t ? printOK() : printDeny();
-                    if (!t) {
-                        createNodePunishment("Authorized required", "You need to authorize BondedECDSAKeepFactory contract for ECDSA Node on <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
-                    }
-                });
-                isSlashed(addr).then(t => {
-                    showSlash.innerHTML = t ? printDeny() : printOK();
-                    if (t) {
-                        // "Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly." - @Antonio in discord
-                        // "ECDSA keeps if there's proven misbehavior (i.e., the signing group produces an unauthorized signature)." - @Antonio in discord
-                        createNodePunishment("You got slashed!", "Slashing is a forced seizure of the delegated tokens for various violations. Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly. ECDSA node is punished when trying to perform various bad operations for example the signing group produces an unauthorized signature. You can <a href='checknode.html' target='_blank'>check the availability</a> of your node on the Internet.", 20, "warn");
-                    }
-                });
-                isSeized(addr).then(t => {
-                    showSeized.innerHTML = t ? printDeny() : printOK();
-                    if (t) {
-                        createNodePunishment("You got slashed!", "Slashing is a forced seizure of the delegated tokens for various violations. Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly. ECDSA node is punished when trying to perform various bad operations for example the signing group produces an unauthorized signature. You can <a href='checknode.html' target='_blank'>check the availability</a> of your node on the Internet.", 20, "warn");
-                    }
-                });
+            isSlashed(addr).then(t => {
+                showSlash.innerHTML = t ? printDeny() : printOK();
+                if (t) {
+                    // "Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly." - @Antonio in discord
+                    // "ECDSA keeps if there's proven misbehavior (i.e., the signing group produces an unauthorized signature)." - @Antonio in discord
+                    createNodePunishment("You got slashed!", "Slashing is a forced seizure of the delegated tokens for various violations. Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly. ECDSA node is punished when trying to perform various bad operations for example the signing group produces an unauthorized signature. You can <a href='checknode.html' target='_blank'>check the availability</a> of your node on the Internet.", 20, "warn");
+                }
             });
-            loadJSON("/contracts/KeepBonding.json", function ( data ) {
-                keepBondingAbi = new web3.eth.Contract(data, keepBondingAddr);
-                isTBTCAuthorized(addr, tBTCSortionAddr).then(t => {
-                    showAuthTBTC.innerHTML = t ? printOK() : printDeny();
-                    if (!t) {
-                        createNodePunishment("Authorized required", "You need to authorize TBTCSystem contract for ECDSA Node on <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
-                    }
-                });
-                getCreatedBonds(addr, tBTCSortionAddr).then(t => {
-                    sequenceBond(t);
-                });
-                loadJSON("/contracts/BondedECDSAKeepFactory.json", function ( data ) {
-                    bondedECDSAFactoryAbi = new web3.eth.Contract(data, bondedECDSAFactoryAddr);
-                    loadJSON("/contracts/BondedSortitionPool.json", function ( data ) {
-                        fetchMinUnbondedETH(data).then(_ => {
-                            getUnbondAmount(addr).then(t => {
-                                var unbonded = parseInt(web3.utils.fromWei(t) * 100) / 100;
-                                if (unbonded < minUnbonded) {
-                                    createNodePunishment("Low unbonded ETH balance", "Your account balance is too low for be eligible ECDSA node operator. Minimum unbonded ETH amount now: "+minUnbonded+". You can top up unbonded ETH balance via <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/add-eth-for-bonding' target='_blank'>guide</a>.", 25, "warn");
-                                }
-                                showUnbonded.innerHTML = unbonded+printETH();
-                            });
+            isSeized(addr).then(t => {
+                showSeized.innerHTML = t ? printDeny() : printOK();
+                if (t) {
+                    createNodePunishment("You got slashed!", "Slashing is a forced seizure of the delegated tokens for various violations. Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly. ECDSA node is punished when trying to perform various bad operations for example the signing group produces an unauthorized signature. You can <a href='checknode.html' target='_blank'>check the availability</a> of your node on the Internet.", 20, "warn");
+                }
+            });
+        });
+        loadJSON("/contracts/KeepBonding.json", function ( data ) {
+            keepBondingAbi = new web3.eth.Contract(data, keepBondingAddr);
+            isTBTCAuthorized(addr, tBTCSortionAddr).then(t => {
+                showAuthTBTC.innerHTML = t ? printOK() : printDeny();
+                if (!t) {
+                    createNodePunishment("Authorized required", "You need to authorize TBTCSystem contract for ECDSA Node on <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
+                }
+            });
+            getCreatedBonds(addr, tBTCSortionAddr).then(t => {
+                sequenceBond(t);
+            });
+            loadJSON("/contracts/BondedECDSAKeepFactory.json", function ( data ) {
+                bondedECDSAFactoryAbi = new web3.eth.Contract(data, bondedECDSAFactoryAddr);
+                loadJSON("/contracts/BondedSortitionPool.json", function ( data ) {
+                    fetchMinUnbondedETH(data).then(_ => {
+                        getUnbondAmount(addr).then(t => {
+                            var unbonded = parseInt(web3.utils.fromWei(t) * 100) / 100;
+                            if (unbonded < minUnbonded) {
+                                createNodePunishment("Low unbonded ETH balance", "Your account balance is too low for be eligible ECDSA node operator. Minimum unbonded ETH amount now: "+minUnbonded+". You can top up unbonded ETH balance via <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/add-eth-for-bonding' target='_blank'>guide</a>.", 25, "warn");
+                            }
+                            showUnbonded.innerHTML = unbonded+printETH();
                         });
                     });
                 });
-
             });
-            loadJSON("/contracts/KeepRandomBeaconOperator.json", function ( data ) {
-                beaconOperatorAbi = new web3.eth.Contract(data, beaconOperatorAddr);
-                loadJSON("/contracts/KeepRandomBeaconOperatorStatistics.json", function ( data ) {
-                    beaconStatisticsAbi = new web3.eth.Contract(data, beaconStatisticsAddr);
-                    getTotalBeaconRewards(addr).then(t => {
-                        showBeaconRewards.innerHTML = t[1]+printETH();
-                        if (t[1] == 0) {
-                            createNodePunishment("You haven't any Random Beacon rewards yet!", "To receive the reward, you need to have a correctly configured Random Beacon Node and just wait a few days after setting it up. Your node should be included in the signing groups. Read more: <a href='https://github.com/keep-network/keep-core/blob/master/docs/random-beacon/pricing.adoc' target='_blank'>github docs</a>.", 10, "info");
+
+        });
+        loadJSON("/contracts/KeepRandomBeaconOperator.json", function ( data ) {
+            beaconOperatorAbi = new web3.eth.Contract(data, beaconOperatorAddr);
+            loadJSON("/contracts/KeepRandomBeaconOperatorStatistics.json", function ( data ) {
+                beaconStatisticsAbi = new web3.eth.Contract(data, beaconStatisticsAddr);
+                getTotalBeaconRewards(addr).then(t => {
+                    showBeaconRewards.innerHTML = t[1]+printETH();
+                    if (t[1] == 0) {
+                        createNodePunishment("You haven't any Random Beacon rewards yet!", "To receive the reward, you need to have a correctly configured Random Beacon Node and just wait a few days after setting it up. Your node should be included in the signing groups. Read more: <a href='https://github.com/keep-network/keep-core/blob/master/docs/random-beacon/pricing.adoc' target='_blank'>github docs</a>.", 10, "info");
+                    }
+                });
+            });
+        });
+        loadJSON("/contracts/TBTCToken.json", function ( data ) {
+            tBTCTokenAbi = new web3.eth.Contract(data, tBTCTokenAddr);
+            getTokensAmount(addr, tBTCTokenAbi).then(t => {
+                showTBTCBalance.innerHTML = t+printTBTC();
+            });
+            loadJSON("/contracts/TBTCSystem.json", function ( data ) {
+                tBTCSystemAbi = new web3.eth.Contract(data, tBTCSystemAddr);
+                getTBTCTransfersBeneficiary(addr).then(t => {
+                    getTBTCCreated(t).then(a => {
+                        const data = t.filter(({ returnValues: { from } }) =>
+                            a.some(
+                                ({ returnValues: { _depositContractAddress } }) =>
+                                isSameEthAddress(_depositContractAddress, from)
+                            )
+                        )
+                        .map(({ transactionHash, returnValues: { from, value } }) => ({
+                            depositTokenId: from,
+                            amount: value,
+                            transactionHash,
+                        }));
+                        var tbtcTotalReward = web3.utils.fromWei(web3.utils.toBN(data.map((reward) => reward.amount).reduce(add, 0)));
+                        showTBTCRewards.innerHTML = tbtcTotalReward+printTBTC();
+                        if (tbtcTotalReward == 0) {
+                            // Based on:
+                            // "Do I understand correctly, tBTC awards are distributed to operators who launched ECDSA nodes and were selected to groups to sign upon creation of a new btc deposit." - @Herobrine ask in discord
+                            // "the rewards are available once the deposit is closed/redeemed (iirc)
+                            // but yes, ecdsa signer groups (keeps) are the ones who get the fees" - @ssh in discord
+                            createNodePunishment("You haven't any tBTC rewards yet!", "To receive the reward, you need to have a correctly configured ECDSA node and have enough ETH bonded. Rewards are distributed after the closure of the BTC deposit between the signers (group) selected when creating this deposit.", 10, "info");
                         }
                     });
                 });
             });
-            loadJSON("/contracts/TBTCToken.json", function ( data ) {
-                tBTCTokenAbi = new web3.eth.Contract(data, tBTCTokenAddr);
-                getTokensAmount(addr, tBTCTokenAbi).then(t => {
-                    showTBTCBalance.innerHTML = t+printTBTC();
-                });
-                loadJSON("/contracts/TBTCSystem.json", function ( data ) {
-                    tBTCSystemAbi = new web3.eth.Contract(data, tBTCSystemAddr);
-                    getTBTCTransfersBeneficiary(addr).then(t => {
-                        getTBTCCreated(t).then(a => {
-                            const data = t.filter(({ returnValues: { from } }) =>
-                                a.some(
-                                    ({ returnValues: { _depositContractAddress } }) =>
-                                    isSameEthAddress(_depositContractAddress, from)
-                                )
-                            )
-                            .map(({ transactionHash, returnValues: { from, value } }) => ({
-                                depositTokenId: from,
-                                amount: value,
-                                transactionHash,
-                            }));
-                            var tbtcTotalReward = web3.utils.fromWei(web3.utils.toBN(data.map((reward) => reward.amount).reduce(add, 0)));
-                            showTBTCRewards.innerHTML = tbtcTotalReward+printTBTC();
-                            if (tbtcTotalReward == 0) {
-                                // Based on:
-                                // "Do I understand correctly, tBTC awards are distributed to operators who launched ECDSA nodes and were selected to groups to sign upon creation of a new btc deposit." - @Herobrine ask in discord
-                                // "the rewards are available once the deposit is closed/redeemed (iirc)
-                                // but yes, ecdsa signer groups (keeps) are the ones who get the fees" - @ssh in discord
-                                createNodePunishment("You haven't any tBTC rewards yet!", "To receive the reward, you need to have a correctly configured ECDSA node and have enough ETH bonded. Rewards are distributed after the closure of the BTC deposit between the signers (group) selected when creating this deposit.", 10, "info");
-                            }
-                        });
-                    });
-                });
-            });
-        }
+        });
     });
 }
 
