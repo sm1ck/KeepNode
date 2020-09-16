@@ -128,6 +128,33 @@ h6 {
   }
 }
 
+@media only screen and (max-width: 400px) {
+  .btncon {
+    font-size: 10px !important;
+  }
+
+  .navbar-brand {
+    font-size: 20px !important;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .btncon {
+    font-size: 8px !important;
+  }
+
+  .navbar-brand {
+    font-size: 18px !important;
+  }
+
+  .panel-title {
+    font-size: 18px !important;
+  }
+  
+  .panel-body {
+    font-size: 15px !important;
+  }
+}
 
 @media only screen and (min-width: 1600px) {
   .panel-title {
