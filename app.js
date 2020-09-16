@@ -437,11 +437,15 @@ function error(msg) {
     }, 10000);
 }
 
+// reload html to awaiting load data
+
 function loader() {
     showBeaconRewards.innerHTML = "<img src='img/loader.gif' class='loader-img' aria-hidden='true'>";
     showTBTCRewards.innerHTML = "<img src='img/loader.gif' class='loader-img' aria-hidden='true'>";
     score.innerHTML = "<div style='text-align: center;'><h3>Total Score of Nodes</h3></div><div style='width: 100%; height: 210px; position: relative'><img src='img/bigloader.gif' style='width: 64px; height: 64px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);' aria-hidden='true'></div><br>";
 }
+
+// print some html data
 
 function printOK() {
     return "<span style='color: green'>✔</span>";

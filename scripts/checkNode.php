@@ -30,14 +30,14 @@ if (empty($port)) {
 }
 
 if (!validateIP($ip)) {
-    printDanger('Error!', 'Invalid ip!');
+    printDanger('Error!', 'Invalid ip.');
 }
 if (strlen(inet_pton($ip)) == 16) {
     $ip = "[".$ip."]";
 }
 
 if (!is_int($port)) {
-    printDanger('Error!', 'Invalid port!');
+    printDanger('Error!', 'Invalid port.');
 }
 
 if ($port < 1 || $port > 65535) {
