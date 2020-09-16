@@ -13,14 +13,13 @@ The project structure is very simple:
 - pictures and styles, libraries
 - php script for ping a port through a socket
 
-![Mobile interface](img/screenshots/screen4.png?raw=true)
-
-![Desktop interface](img/screenshots/screen1.png?raw=true)
-
-![Desktop interface](img/screenshots/screen2.png?raw=true)
-
-![Desktop interface](img/screenshots/screen3.png?raw=true)
-
 At the moment, this is my first experience of creating decentralized applications, so there may be some errors or inaccuracies. You can report them via Issue.
 
 Author: Herobrine#1852
+
+Screenshots:
+
+<img src="img/screenshots/screen4.png?raw=true" width="600"/><br>
+<img src="img/screenshots/screen3.png?raw=true" width="600"/><br>
+<img src="img/screenshots/screen2.png?raw=true" width="600"/><br>
+<img src="img/screenshots/screen1.png?raw=true" width="600"/><br>
