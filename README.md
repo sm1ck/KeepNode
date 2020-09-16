@@ -5,6 +5,8 @@ The idea to create this application came to me when I remembered about Google Pa
 
 This app uses abi to access smart contracts and displays information about the operator of your node. Connection to the app goes through MetaMask. You can use it in your browser with the extension or in your smartphone through the native MetaMask app.
 
+The app uses accurate data on the required minimum value of unbonded ETH through sortition pools and accurate data on the required minimum value of stake in delegation.
+
 The project structure is very simple:
 - several html files to display site in browser
 - main file with application code app.js
