@@ -19,7 +19,7 @@ Author: Herobrine#1852
 
 Screenshots:
 
-<img src="img/screenshots/screen4.png?raw=true" width="400"/><br>
-<img src="img/screenshots/screen1.png?raw=true" width="400"/><br>
-<img src="img/screenshots/screen2.png?raw=true" width="400"/><br>
-<img src="img/screenshots/screen3.png?raw=true" width="400"/><br>
+<img src="img/screenshots/screen4.png?raw=true" width="350"/><br><br>
+<img src="img/screenshots/screen1.png?raw=true" width="600"/><br><br>
+<img src="img/screenshots/screen2.png?raw=true" width="600"/><br><br>
+<img src="img/screenshots/screen3.png?raw=true" width="600"/><br><br>
