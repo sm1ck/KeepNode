@@ -11,7 +11,7 @@ The project structure is very simple:
 - several html files to display site in browser
 - main file with application code app.js
 - pictures and styles, libraries
-- php script for ping a port through a socket
+- php script for ping ip:port through a socket
 
 At the moment, this is my first experience of creating decentralized applications, so there may be some errors or inaccuracies. You can report them via Issue.
 
