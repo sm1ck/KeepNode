@@ -29,7 +29,7 @@ var beaconStatisticsAddr = '0xe5984A30a5DBaF1FfF818A57dD5f30D74a8dfaBf';
 var tBTCTokenAddr = '0x7c07C42973047223F80C4A69Bb62D5195460Eb5F';
 var tBTCSystemAddr = '0xc3f96306eDabACEa249D2D22Ec65697f38c6Da69';
 
-var web3, addr, operatorsList, totalScore, minUnbonded, minStake, isPunishment, isMobile, keepTokenAbi, tokenStakingAbi, keepBondingAbi, beaconOperatorAbi, beaconStatisticsAbi, tBTCTokenAbi, tBTCSystemAbi, bondedECDSAFactoryAbi, bondedSortitionPoolAbi;
+var web3, addr, operatorsList, totalScore, minUnbonded, minStake, isPunishment, isMobile, isMainnet, keepTokenAbi, tokenStakingAbi, keepBondingAbi, beaconOperatorAbi, beaconStatisticsAbi, tBTCTokenAbi, tBTCSystemAbi, bondedECDSAFactoryAbi, bondedSortitionPoolAbi;
 
 // on click metamask
 
@@ -85,6 +85,7 @@ const isSameEthAddress = (address1, address2) => {
 // Mainnet deployed!
 
 function changeToMainnet() {
+    isMainnet = true;
     keepTokenAddr = '0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC';
     tokenStakingAddr = '0x1293a54e160d1cd7075487898d65266081a15458';
     beaconOperatorAddr = '0xdF708431162Ba247dDaE362D2c919e0fbAfcf9DE';
@@ -153,7 +154,7 @@ async function sequenceOperators() {
     }));
     minStake = await Promise.all([getMinStakeAmount()]);
     if (amountstake < minStake[0]) {
-        createNodePunishment("Low stake balance", "Your account balance is too low for staking. Minimum stake amount now: "+minStake[0]+". If you have grants, just stake it. See the <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/delegate-stake' target='_blank'>guide</a>. If you still see 0, authorize the RandomBeaconOperator contract on <a href='https://dashboard.test.keep.network/applications/random-beacon' target='_blank'>dashboard</a>.", 50, "critical");
+        createNodePunishment("Low stake balance", "Your account balance is too low for staking. Minimum stake amount now: "+minStake[0]+". If you have grants, just stake it. See the <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/delegate-stake' target='_blank'>guide</a>. If you still see 0, authorize the RandomBeaconOperator contract on <a href='"+getDashLink()+"/applications/random-beacon' target='_blank'>dashboard</a>.", 50, "critical");
     }
     showStake.innerHTML = amountstake+printKEEP();
 }
@@ -518,10 +519,19 @@ function scoreRed() {
     return "<div style='text-align: center;'><h3>Total Score of Nodes</h3></div><div class='red ldBar label-center' style='width: 100%; height: 210px' data-value='"+totalScore+"' data-preset='circle' data-stroke-width='5' data-stroke-dir='reverse'></div>"+fetchIssue+"<br>";;
 }
 
+function getDashLink() {
+    if (isMainnet) {
+        return "https://dashboard.keep.network";
+    } else {
+        return "https://dashboard.test.keep.network";
+    }
+}
+
 // load application
 
 function loadALL() {
     var start = false;
+    isMainnet = false;
     if (typeof web3 !== 'undefined') {
         web3 = new Web3(web3.currentProvider);
     } else {
@@ -590,13 +600,13 @@ function loadALL() {
             isAuthorized(addr, beaconOperatorAddr).then(t => {
                 showAuthBeacon.innerHTML = t ? printOK() : printDeny();
                 if (!t) {
-                    createNodePunishment("Authorized required", "You need to authorize RandomBeaconOperator contract for Random Beacon Node on <a href='https://dashboard.test.keep.network/applications/random-beacon' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
+                    createNodePunishment("Authorized required", "You need to authorize RandomBeaconOperator contract for Random Beacon Node on <a href='"+getDashLink()+"/applications/random-beacon' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
                 }
             });
             isAuthorized(addr, bondedECDSAFactoryAddr).then(t => {
                 showAuthECDSA.innerHTML = t ? printOK() : printDeny();
                 if (!t) {
-                    createNodePunishment("Authorized required", "You need to authorize BondedECDSAKeepFactory contract for ECDSA Node on <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
+                    createNodePunishment("Authorized required", "You need to authorize BondedECDSAKeepFactory contract for ECDSA Node on <a href='"+getDashLink()+"/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
                 }
             });
             isSlashed(addr).then(t => {
@@ -619,7 +629,7 @@ function loadALL() {
             isTBTCAuthorized(addr, tBTCSortionAddr).then(t => {
                 showAuthTBTC.innerHTML = t ? printOK() : printDeny();
                 if (!t) {
-                    createNodePunishment("Authorized required", "You need to authorize TBTCSystem contract for ECDSA Node on <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
+                    createNodePunishment("Authorized required", "You need to authorize TBTCSystem contract for ECDSA Node on <a href='"+getDashLink()+"/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
                 }
             });
             getCreatedBonds(addr, tBTCSortionAddr).then(t => {
@@ -632,7 +642,7 @@ function loadALL() {
                         getUnbondAmount(addr).then(t => {
                             var unbonded = parseInt(web3.utils.fromWei(t) * 100) / 100;
                             if (unbonded < minUnbonded) {
-                                createNodePunishment("Low unbonded ETH balance", "Your account balance is too low for be eligible ECDSA node operator. Minimum unbonded ETH amount now: "+minUnbonded+". You can top up unbonded ETH balance via <a href='https://dashboard.test.keep.network/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/add-eth-for-bonding' target='_blank'>guide</a>.", 25, "warn");
+                                createNodePunishment("Low unbonded ETH balance", "Your account balance is too low for be eligible ECDSA node operator. Minimum unbonded ETH amount now: "+minUnbonded+". You can top up unbonded ETH balance via <a href='"+getDashLink()+"/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/add-eth-for-bonding' target='_blank'>guide</a>.", 25, "warn");
                             }
                             showUnbonded.innerHTML = unbonded+printETH();
                         });
