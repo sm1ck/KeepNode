@@ -127,3 +127,18 @@ h6 {
     width: 3.75vw !important;
   }
 }
+
+
+@media only screen and (min-width: 1600px) {
+  .panel-title {
+    font-size: 28px !important;
+  }
+  
+  .panel-body {
+    font-size: 25px !important;
+  }
+
+  .btncon {
+    font-size: 21px !important;
+  }
+}
