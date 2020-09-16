@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Check node available | KeepNode.app</title>
+    <meta name="description" content="KeepNode.app - check your both Keep nodes just to make sure that everything works fine!">
+    <meta property="og:title" content="Check your Keep node | KeepNode.app" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:description" content="KeepNode.app - check your both Keep nodes just to make sure that everything works fine!" />
+    <meta property="og:url" content="https://keepnode.app/" />
+    <meta property="og:image" content="https://keepnode.app/img/ogkeeplogo.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="537" />
+    <meta property="og:image:height" content="240" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/loading-bar.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+    <script src="js/loading-bar.min.js"></script>
+    <script src="js/detect-provider.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+
+        <!-- Static navbar -->
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Check your Keep node</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    <li class="active"><a href="checknode.html">Check node available</a></li>
+                    </ul>
+                </li>
+                <li><a href="about.html">About</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Github</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+            </div><!--/.container-fluid -->
+        </nav>
+
+        <!-- Main component for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div style='text-align: center;'>
+                <h3>Check node available</h3>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                <h3 class="panel-title">Get IP and port</h3>
+                </div>
+                <div class="panel-body">
+                    <p><b>#1. Get server IP.</b></p>
+                    <p>You can get IP from Random Beacon <u>config.toml</u>, "AnnouncedAddresses" section.</p>
+                    <p>Also you can get primary IP from server:</p>
+                    <div class="highlight"><pre><code>curl ifconfig.co</code></pre></div>
+                    <p>If you haven't curl, just install it.</p>
+                    <p>Debian/Ubuntu:</p>
+                    <div class="highlight"><pre><code>sudo apt-get install curl</code></pre></div>
+                    <p>MacOs:</p>
+                    <div class="highlight"><pre><code>brew install curl</code></pre></div>
+                    <p><b>#2. Get server port.</b></p>
+                    <p><b style='font-weight: 500'>Random Beacon node.</b></p>
+                    <p>Open <u>config.toml</u>, find "AnnouncedAddresses" section. After that find "/tcp/" and copy port number.</p>
+                    <p><img src='img/port.png' style='width: 500px;'></p>
+                    <p><b style='font-weight: 500'>ECDSA node.</b></p>
+                    <p>Open <u>config.toml</u>, find "[LibP2P]" section, then find "Port".</p>
+                    <p><img src='img/port2.png' style='width: 180px;'></p>
+                    <p>You can check both nodes: first Random Beacon, then ECDSA.</p>
+                    <p>If you have only ipv6 address, it should also be verified.</p>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                <h3 class="panel-title">Input IP and port</h3>
+                </div>
+                <div class="panel-body">
+                    <div>IP: <input type='text' id='ip'></div>
+                    <div>Port: <input type='text' id='port'></div>
+                    <div><button class="btn btn-primary" id='btn' style='text-transform: none'>Ping it!</button></div>
+                    <div id='msg'></div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- /container -->
+    <script>
+        const btn = document.getElementById("btn");
+        const ip = document.getElementById("ip");
+        const port = document.getElementById("port");
+        const msg = document.getElementById("msg");
+
+        function ping() {
+            msg.innerHTML = "<img src='img/loader.gif' class='loader-img' aria-hidden='true'>";
+            $.get( "scripts/checkNode.php", { ip: ip.value, port: port.value } ).done(function( data ) {
+                msg.innerHTML = data;
+            });
+        }
+
+        btn.addEventListener('click', () => {
+            ping();
+        });
+
+        if ('ontouchstart' in window) {
+            btn.addEventListener('touchstart', () => {
+                ping();
+            });
+        }
+    </script>
+</body>
+</html>

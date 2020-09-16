@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css?family=Varela+Round&display=swap');
+
+body {
+padding-top: 20px;
+padding-bottom: 20px;
+}
+
+.navbar {
+margin-bottom: 20px;
+}
+
+  /*!
+ * IE10 viewport hack for Surface/desktop Windows 8 bug
+ * Copyright 2014-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+/*
+ * See the Getting Started docs for more information:
+ * http://getbootstrap.com/getting-started/#support-ie10-width
+ */
+@-ms-viewport     { width: device-width; }
+@-o-viewport      { width: device-width; }
+@viewport         { width: device-width; }
+
+.btn-primary:focus {
+  outline: 0 !important;
+}
+
+.btn-img {
+  width: 2vw;
+  object-fit: cover;
+}
+
+.loader-img {
+  width: 1.5vw;
+  object-fit: cover;
+}
+
+.btncon {
+  align-items:center;
+  text-transform: none;
+}
+
+h5 {
+  font-size: 23px;
+}
+
+h6 {
+  font-size: 17px;
+}
+
+.panel-title {
+  font-size: 23px;
+}
+
+.panel-body {
+  font-size: 20px;
+}
+
+.demo.ldBar .ldBar-label {
+  color: #09f;
+  font-family: 'varela round';
+  font-size: 2.5em;
+  font-weight: 900;
+}
+.demo.ldBar .ldBar-label:after {
+  content: "/100";
+  font-family: 'varela round';
+}
+
+.demo.ldBar path.mainline { stroke-width: 10; stroke: #09f; stroke-linecap: round }
+.demo.ldBar path.baseline { stroke-width: 14; stroke: #f1f2f3; stroke-linecap: round }
+
+.green.ldBar .ldBar-label {
+  color: #32CD32;
+  font-family: 'varela round';
+  font-size: 2.5em;
+  font-weight: 900;
+}
+.green.ldBar .ldBar-label:after {
+  content: "/100";
+  font-family: 'varela round';
+}
+
+.green.ldBar path.mainline { stroke-width: 10; stroke: #32CD32; stroke-linecap: round }
+.green.ldBar path.baseline { stroke-width: 14; stroke: #f1f2f3; stroke-linecap: round }
+
+.orange.ldBar .ldBar-label {
+  color: orange;
+  font-family: 'varela round';
+  font-size: 2.5em;
+  font-weight: 900;
+}
+.orange.ldBar .ldBar-label:after {
+  content: "/100";
+  font-family: 'varela round';
+}
+
+.orange.ldBar path.mainline { stroke-width: 10; stroke: orange; stroke-linecap: round }
+.orange.ldBar path.baseline { stroke-width: 14; stroke: #f1f2f3; stroke-linecap: round }
+
+.red.ldBar .ldBar-label {
+  color: red;
+  font-family: 'varela round';
+  font-size: 2.5em;
+  font-weight: 900;
+}
+.red.ldBar .ldBar-label:after {
+  content: "/100";
+  font-family: 'varela round';
+}
+
+.red.ldBar path.mainline { stroke-width: 10; stroke: red; stroke-linecap: round }
+.red.ldBar path.baseline { stroke-width: 14; stroke: #f1f2f3; stroke-linecap: round }
+
+@media only screen and (max-width: 768px) {
+  .btncon {
+    font-size: 12px !important;
+  }
+
+  .btn-img {
+    width: 5vw !important;
+  }
+
+  .loader-img {
+    width: 3.75vw !important;
+  }
+}
