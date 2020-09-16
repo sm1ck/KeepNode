@@ -16,6 +16,8 @@ const showTBTCBalance = document.querySelector('.showTBTCBalance');
 const mainapp = document.querySelector('.mainapp');
 const score = document.querySelector('.score');
 const punishmentBox = document.querySelector('.punishmentBox');
+const definedAddr = document.querySelector('.definedAddr');
+const definedNet = document.querySelector('.definedNet');
 const err = document.querySelector('.errmsg');
 
 // much thanks https://gist.github.com/knarz for share keep contacts addresses
@@ -29,7 +31,7 @@ var beaconStatisticsAddr = '0xe5984A30a5DBaF1FfF818A57dD5f30D74a8dfaBf';
 var tBTCTokenAddr = '0x7c07C42973047223F80C4A69Bb62D5195460Eb5F';
 var tBTCSystemAddr = '0xc3f96306eDabACEa249D2D22Ec65697f38c6Da69';
 
-var web3, addr, operatorsList, totalScore, minUnbonded, minStake, isPunishment, isMobile, isMainnet, keepTokenAbi, tokenStakingAbi, keepBondingAbi, beaconOperatorAbi, beaconStatisticsAbi, tBTCTokenAbi, tBTCSystemAbi, bondedECDSAFactoryAbi, bondedSortitionPoolAbi;
+var web3, addr, operatorsList, totalScore, minUnbonded, minStake, isPunishment, isMobile, isMainnet, isDefinedAddr, keepTokenAbi, tokenStakingAbi, keepBondingAbi, beaconOperatorAbi, beaconStatisticsAbi, tBTCTokenAbi, tBTCSystemAbi, bondedECDSAFactoryAbi, bondedSortitionPoolAbi;
 
 // on click metamask
 
@@ -57,11 +59,12 @@ window.addEventListener('load', function() {
 });
 
 // on change account
-
-ethereum.on('accountsChanged', function (accounts) {
-    runApp();
-    loader();
-});
+if (typeof ethereum !== 'undefined') {
+    ethereum.on('accountsChanged', function (accounts) {
+        runApp();
+        loader();
+    });
+}
 
 // helpers
 
@@ -82,6 +85,33 @@ const isSameEthAddress = (address1, address2) => {
     )
 }
 
+var isAddress = function (address) {
+    // check if it has the basic requirements of an address
+    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+        return false;
+        // If it's ALL lowercase or ALL upppercase
+    } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
+        return true;
+        // Otherwise check each case
+    } else {
+        return checkAddressChecksum(address);
+    }
+};
+
+var checkAddressChecksum = function (address) {
+    // Check each case
+    address = address.replace(/^0x/i,'');
+    var addressHash = sha3(address.toLowerCase()).replace(/^0x/i,'');
+
+    for (var i = 0; i < 40; i++ ) {
+        // the nth letter should be uppercase if the nth digit of casemap is 1
+        if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
+            return false;
+        }
+    }
+    return true;
+};
+
 // Mainnet deployed!
 
 function changeToMainnet() {
@@ -89,8 +119,8 @@ function changeToMainnet() {
     keepTokenAddr = '0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC';
     tokenStakingAddr = '0x1293a54e160d1cd7075487898d65266081a15458';
     beaconOperatorAddr = '0xdF708431162Ba247dDaE362D2c919e0fbAfcf9DE';
-    bondedECDSAFactoryAddr = '0x9eccf03dfbda6a5e50d7aba14e0c60c2f6c575e6';
-    tBTCSortionAddr = '0x4b558ff45f08198e00cc13de2ccefb9998e0290e';
+    bondedECDSAFactoryAddr = '0xA7d9E842EFB252389d613dA88EDa3731512e40bD';
+    tBTCSortionAddr = '0xa3748633c6786e1842b5cc44fa43db1ecc710501';
     keepBondingAddr = '0x27321f84704a599aB740281E285cc4463d89A3D5';
     beaconStatisticsAddr = '0x3975CE253fF9d586cF08C3898f95064b7a5718E7';
     tBTCTokenAddr = '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa';
@@ -100,13 +130,22 @@ function changeToMainnet() {
 // get account from click
 
 async function getAccount() {
-    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-    const account = accounts[0];
-    if (account == addr) {
-        return;
+    var defAddr = definedAddr.innerHTML;
+    if (web3.utils.isAddress(defAddr)) {
+        defAddr = web3.utils.toChecksumAddress(defAddr);
+        if (defAddr == addr) {
+            return;
+        }
+        addr = defAddr;
+    } else {
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0];
+        if (account == addr) {
+            return;
+        }
+        addr = account;
     }
-    addr = account;
-    ethereumButton.innerHTML = "<img src='img/ethereum.png' class='btn-img' aria-hidden='true'> "+account;
+    ethereumButton.innerHTML = "<img src='img/ethereum.png' class='btn-img' aria-hidden='true'> "+addr;
     loadALL();
 }
 
@@ -422,7 +461,7 @@ function createNodePunishment(header, msg, amount, mode) {
 
 async function checkMobile() {
     const provider = await detectEthereumProvider()
-    if (!provider) {
+    if (!provider && !isDefinedAddr) {
         isMobile = true;
         printMobile();
     }
@@ -532,11 +571,6 @@ function getDashLink() {
 function loadALL() {
     var start = false;
     isMainnet = false;
-    if (typeof web3 !== 'undefined') {
-        web3 = new Web3(web3.currentProvider);
-    } else {
-        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    }
     // accurate check current network
     web3.eth.net.getNetworkType().then(t => {
         if (t == "main") {
@@ -702,5 +736,22 @@ function loadALL() {
 // main function
 
 function runApp() {
-    getAccount();
+    var defAddr = definedAddr.innerHTML;
+    isDefinedAddr = false;
+    if (isAddress(defAddr)) {
+        isDefinedAddr = true;
+    }
+    if (typeof web3 !== 'undefined') {
+        web3 = new Web3(web3.currentProvider);
+    } else {
+        var defNet = definedNet.innerHTML;
+        if (defNet == 'true') {
+            web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/f90864bedd6249daae088f6cbb95877b"));
+        } else {
+            web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/f90864bedd6249daae088f6cbb95877b"));
+        }
+    }
+    web3.eth.net.isListening().then(() => {
+        getAccount();
+    });
 }
