@@ -87,10 +87,10 @@
                     <p><b>#2. Get server port.</b></p>
                     <p><b style='font-weight: 500'>Random Beacon node.</b></p>
                     <p>Open <u>config.toml</u>, find "AnnouncedAddresses" section. After that find "/tcp/" and copy port number.</p>
-                    <p><img src='img/port.png' style='width: 500px;'></p>
+                    <p><img src='img/port.png' class='img1'></p>
                     <p><b style='font-weight: 500'>ECDSA node.</b></p>
                     <p>Open <u>config.toml</u>, find "[LibP2P]" section, then find "Port".</p>
-                    <p><img src='img/port2.png' style='width: 180px;'></p>
+                    <p><img src='img/port2.png' class='img2'></p>
                     <p>You can check both nodes: first Random Beacon, then ECDSA.</p>
                     <p>If you have only ipv6 address, it should also be verified.</p>
                 </div>
@@ -108,6 +108,19 @@
             </div>
         </div>
     </div> <!-- /container -->
+    <style>
+        .img1 {
+            width: 500px;
+        }
+        .img2 {
+            width: 180px;
+        }
+        @media only screen and (max-width: 768px) {
+            .img1 {
+                width: 300px;
+            }
+        }
+    </style>
     <script>
         const btn = document.getElementById("btn");
         const ip = document.getElementById("ip");
