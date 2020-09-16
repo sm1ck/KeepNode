@@ -140,7 +140,7 @@ async function sequenceOperators() {
     }));
     minStake = await Promise.all([getMinStakeAmount()]);
     if (amountstake < minStake[0]) {
-        createNodePunishment("Low stake balance", "Your account balance is too low for staking. Minimum stake amount now: "+minStake[0]+". If you have grants, just stake it. See the <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/delegate-stake' target='_blank'>guide</a>.", 50, "critical");
+        createNodePunishment("Low stake balance", "Your account balance is too low for staking. Minimum stake amount now: "+minStake[0]+". If you have grants, just stake it. See the <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/delegate-stake' target='_blank'>guide</a>. If you still see 0, authorize the RandomBeaconOperator contract on <a href='https://dashboard.test.keep.network/applications/random-beacon' target='_blank'>dashboard</a>.", 50, "critical");
     }
     showStake.innerHTML = amountstake+printKEEP();
 }
