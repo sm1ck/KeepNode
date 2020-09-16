@@ -580,7 +580,7 @@ function loadALL() {
                     if (t) {
                         // "Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly." - @Antonio in discord
                         // "ECDSA keeps if there's proven misbehavior (i.e., the signing group produces an unauthorized signature)." - @Antonio in discord
-                        createNodePunishment("You got slashed!", "Slashing is a forced seizure of the delegated tokens for various violations. Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly. ECDSA node is punished when trying to perform various bad operations for example the signing group produces an unauthorized signature.", 20, "warn");
+                        createNodePunishment("You got slashed!", "Slashing is a forced seizure of the delegated tokens for various violations. Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly. ECDSA node is punished when trying to perform various bad operations for example the signing group produces an unauthorized signature. You can <a href='checknode.html' target='_blank'>check the availability</a> of your node on the Internet.", 20, "warn");
                     }
                 });
                 isSeized(addr).then(t => {
