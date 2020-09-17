@@ -18,6 +18,9 @@ const score = document.querySelector('.score');
 const punishmentBox = document.querySelector('.punishmentBox');
 const definedAddr = document.querySelector('.definedAddr');
 const definedNet = document.querySelector('.definedNet');
+const addrButton = document.querySelector('.addrButton');
+const addrInput = document.querySelector('.addrInput');
+const addrInfo = document.querySelector('.addrInfo');
 const err = document.querySelector('.errmsg');
 
 // much thanks https://gist.github.com/knarz for share keep contacts addresses
@@ -25,13 +28,13 @@ var keepTokenAddr = '0x343d3dda00415289cdd4e8030f63a4a5a2548ff9';
 var tokenStakingAddr = '0x234d2182B29c6a64ce3ab6940037b5C8FdAB608e';
 var beaconOperatorAddr = '0xC8337a94a50d16191513dEF4D1e61A6886BF410f';
 var bondedECDSAFactoryAddr = '0x9eccf03dfbda6a5e50d7aba14e0c60c2f6c575e6';
-var tBTCSortionAddr = '0x20F1f14a42135d3944fEd1AeD2bE13b01c152054';
+var tBTCSortitionAddr = '0x20F1f14a42135d3944fEd1AeD2bE13b01c152054';
 var keepBondingAddr = '0x60535A59B4e71F908f3fEB0116F450703FB35eD8';
 var beaconStatisticsAddr = '0xe5984A30a5DBaF1FfF818A57dD5f30D74a8dfaBf';
 var tBTCTokenAddr = '0x7c07C42973047223F80C4A69Bb62D5195460Eb5F';
 var tBTCSystemAddr = '0xc3f96306eDabACEa249D2D22Ec65697f38c6Da69';
 
-var web3, addr, operatorsList, totalScore, minUnbonded, minStake, isPunishment, isMobile, isMainnet, isDefinedAddr, keepTokenAbi, tokenStakingAbi, keepBondingAbi, beaconOperatorAbi, beaconStatisticsAbi, tBTCTokenAbi, tBTCSystemAbi, bondedECDSAFactoryAbi, bondedSortitionPoolAbi;
+var web3, addr, operatorsList, totalScore, minUnbonded, minStake, isPunishment, isMobile, isMainnet, isDefinedAddr, isInfura, keepTokenAbi, tokenStakingAbi, keepBondingAbi, beaconOperatorAbi, beaconStatisticsAbi, tBTCTokenAbi, tBTCSystemAbi, bondedECDSAFactoryAbi, bondedSortitionPoolAbi;
 
 // on click metamask
 
@@ -51,16 +54,26 @@ if ('ontouchstart' in window) {
             window.location.href = "https://metamask.app.link/dapp/keepnode.app/";
         }
     });
+    addrButton.addEventListener('touchstart', () => {
+        checkCustomAddr();
+    });
 }
 
 window.addEventListener('load', function() {
     isMobile = false;
+    checkDefAddr();
     checkMobile();
 });
 
+addrButton.addEventListener('click', () => {
+    checkCustomAddr();
+});
+
 // on change account
+
 if (typeof ethereum !== 'undefined') {
     ethereum.on('accountsChanged', function (accounts) {
+        checkDefAddr();
         runApp();
         loader();
     });
@@ -85,32 +98,20 @@ const isSameEthAddress = (address1, address2) => {
     )
 }
 
-var isAddress = function (address) {
-    // check if it has the basic requirements of an address
-    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-        return false;
-        // If it's ALL lowercase or ALL upppercase
-    } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
-        return true;
-        // Otherwise check each case
-    } else {
-        return checkAddressChecksum(address);
-    }
-};
+function validateInputAddresses(address) {
+    return (/^(0x){1}[0-9a-fA-F]{40}$/i.test(address));
+}
 
-var checkAddressChecksum = function (address) {
-    // Check each case
-    address = address.replace(/^0x/i,'');
-    var addressHash = sha3(address.toLowerCase()).replace(/^0x/i,'');
+// check custom address input
 
-    for (var i = 0; i < 40; i++ ) {
-        // the nth letter should be uppercase if the nth digit of casemap is 1
-        if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
-            return false;
-        }
+function checkCustomAddr() {
+    if (!validateInputAddresses(addrInput.value)) {
+        addrInfo.innerHTML = '<br><div class="alert alert-danger" role="alert"><strong>Error!</strong> Invalid address!</div>';
+        return;
     }
-    return true;
-};
+    var isCheck = $('.checkNet').is(':checked');
+    window.location.href = 'https://keepnode.app/?address='+addrInput.value+"&mainnet="+isCheck;
+}
 
 // Mainnet deployed!
 
@@ -120,14 +121,14 @@ function changeToMainnet() {
     tokenStakingAddr = '0x1293a54e160d1cd7075487898d65266081a15458';
     beaconOperatorAddr = '0xdF708431162Ba247dDaE362D2c919e0fbAfcf9DE';
     bondedECDSAFactoryAddr = '0xA7d9E842EFB252389d613dA88EDa3731512e40bD';
-    tBTCSortionAddr = '0xa3748633c6786e1842b5cc44fa43db1ecc710501';
+    tBTCSortitionAddr = '0xa3748633c6786e1842b5cc44fa43db1ecc710501';
     keepBondingAddr = '0x27321f84704a599aB740281E285cc4463d89A3D5';
     beaconStatisticsAddr = '0x3975CE253fF9d586cF08C3898f95064b7a5718E7';
     tBTCTokenAddr = '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa';
     tBTCSystemAddr = '0xe20A5C79b39bC8C363f0f49ADcFa82C2a01ab64a';
 }
 
-// get account from click
+// get account
 
 async function getAccount() {
     var defAddr = definedAddr.innerHTML;
@@ -464,12 +465,24 @@ async function checkMobile() {
     if (!provider && !isDefinedAddr) {
         isMobile = true;
         printMobile();
+    } else if (!provider) {
+        runApp();
     }
 }
 
 function printMobile() {
     err.innerHTML = "<center><img src='img/qrcode.png'></center><br>";
     err.style.display = 'block';
+}
+
+// validate and is any uri custom address
+
+function checkDefAddr() {
+    var defAddr = definedAddr.innerHTML;
+    isDefinedAddr = false;
+    if (validateInputAddresses(defAddr)) {
+        isDefinedAddr = true;
+    }
 }
 
 // for load json abi
@@ -575,7 +588,7 @@ function loadALL() {
     web3.eth.net.getNetworkType().then(t => {
         if (t == "main") {
             changeToMainnet();
-            info("If you participate in PFK and you need to check the node in the testnet, please switch to \"Ropsten!\"");
+            info("If you participate in PFK and you need to check the node in the testnet, please switch to \"Ropsten\"!");
         }
         minUnbonded = 0;
         totalScore = 100;
@@ -660,13 +673,13 @@ function loadALL() {
         });
         loadJSON("/contracts/KeepBonding.json", function ( data ) {
             keepBondingAbi = new web3.eth.Contract(data, keepBondingAddr);
-            isTBTCAuthorized(addr, tBTCSortionAddr).then(t => {
+            isTBTCAuthorized(addr, tBTCSortitionAddr).then(t => {
                 showAuthTBTC.innerHTML = t ? printOK() : printDeny();
                 if (!t) {
-                    createNodePunishment("Authorized required", "You need to authorize TBTCSystem contract for ECDSA Node on <a href='"+getDashLink()+"/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
+                    createNodePunishment("Authorized required", "You need to authorize tBTCSystem contract for ECDSA Node on <a href='"+getDashLink()+"/applications/tbtc' target='_blank'>dashboard</a>. Also just check this <a href='https://keep-network.gitbook.io/staking-documentation/token-dashboard/authorize-contracts' target='_blank'>guide</a>.", 50, "critical");
                 }
             });
-            getCreatedBonds(addr, tBTCSortionAddr).then(t => {
+            getCreatedBonds(addr, tBTCSortitionAddr).then(t => {
                 sequenceBond(t);
             });
             loadJSON("/contracts/BondedECDSAKeepFactory.json", function ( data ) {
@@ -736,19 +749,18 @@ function loadALL() {
 // main function
 
 function runApp() {
-    var defAddr = definedAddr.innerHTML;
-    isDefinedAddr = false;
-    if (isAddress(defAddr)) {
-        isDefinedAddr = true;
-    }
+    isInfura = false;
+    checkDefAddr();
     if (typeof web3 !== 'undefined') {
         web3 = new Web3(web3.currentProvider);
     } else {
+        isInfura = true;
         var defNet = definedNet.innerHTML;
         if (defNet == 'true') {
-            web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/f90864bedd6249daae088f6cbb95877b"));
+            web3 = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/f90864bedd6249daae088f6cbb95877b"));
         } else {
-            web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/f90864bedd6249daae088f6cbb95877b"));
+            // thanks to @whataday2day#1271 and Danil Ushakov#5735
+            web3 = new Web3(new Web3.providers.WebsocketProvider("wss://ropsten.pfk2020.top/wss"));
         }
     }
     web3.eth.net.isListening().then(() => {

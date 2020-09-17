@@ -64,6 +64,7 @@ $net = (isset($_GET['mainnet']) && !empty($_GET['mainnet'])) ? $_GET['mainnet'] 
                     </ul>
                 </li>
                 <li><a href="about.html">About</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#flipFlop">Add custom address</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 <li><a href="https://github.com/sm1ck/KeepNode" target="_blank">Github</a></li>
@@ -76,7 +77,7 @@ $net = (isset($_GET['mainnet']) && !empty($_GET['mainnet'])) ? $_GET['mainnet'] 
         <div class="jumbotron">
             <span style='display: none' class='definedAddr'><?php echo $addr ?></span>
             <span style='display: none' class='definedNet'><?php echo $net ?></span>
-            <span style='display: none' class='errmsg'></span>
+            <div style='display: none' class='errmsg'></div>
             <div class='score' style='display: none'>
                 <div style='text-align: center;'>
                     <h3>Total Score of Nodes</h3>
@@ -148,6 +149,35 @@ $net = (isset($_GET['mainnet']) && !empty($_GET['mainnet'])) ? $_GET['mainnet'] 
         </div>
 
     </div> <!-- /container -->
+
+    <!-- The modal -->
+    <div class="modal fade" id="flipFlop" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabel">Add custom address</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <h6>Address: <input type='text' class='addrInput'></h6>
+                        </div>
+                        <div><h6>Is Mainnet? <input type='checkbox' class='checkNet'></h6></div>
+                        <div>
+                            <button class='addrButton btn btn-primary' style='text-transform: none'>Load it!</button>
+                        </div>
+                        <br>
+                        <div class='addrInfo'></div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
   </body>
 </html>

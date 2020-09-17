@@ -23,7 +23,7 @@ margin-bottom: 20px;
 @-o-viewport      { width: device-width; }
 @viewport         { width: device-width; }
 
-.btn-primary:focus {
+.btn:focus {
   outline: 0 !important;
 }
 
@@ -39,6 +39,10 @@ margin-bottom: 20px;
 
 .btncon {
   align-items:center;
+  text-transform: none;
+}
+
+.btn {
   text-transform: none;
 }
 
@@ -119,6 +123,10 @@ h6 {
     font-size: 12px !important;
   }
 
+  .btn {
+    font-size: 12px !important;
+  }
+
   .btn-img {
     width: 5vw !important;
   }
@@ -133,6 +141,10 @@ h6 {
     font-size: 10px !important;
   }
 
+  .btn {
+    font-size: 10px !important;
+  }
+
   .navbar-brand {
     font-size: 20px !important;
   }
@@ -140,6 +152,10 @@ h6 {
 
 @media only screen and (max-width: 350px) {
   .btncon {
+    font-size: 8px !important;
+  }
+
+  .btn {
     font-size: 8px !important;
   }
 
@@ -166,6 +182,10 @@ h6 {
   }
 
   .btncon {
+    font-size: 21px !important;
+  }
+
+  .btn {
     font-size: 21px !important;
   }
 }
