@@ -475,7 +475,7 @@ function printMobile() {
     err.style.display = 'block';
 }
 
-// validate and is any uri custom address
+// validate and def uri custom address
 
 function checkDefAddr() {
     var defAddr = definedAddr.innerHTML;

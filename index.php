@@ -164,7 +164,7 @@ $net = (isset($_GET['mainnet']) && !empty($_GET['mainnet'])) ? $_GET['mainnet'] 
                         <div>
                             <h6>Address: <input type='text' class='addrInput'></h6>
                         </div>
-                        <div><h6>Is Mainnet? <input type='checkbox' class='checkNet'></h6></div>
+                        <div><h6>Is Mainnet? <input type='checkbox' class='checkNet'> <span class='note'>(сhoose if you don't have MetaMask installed)</span></h6></div>
                         <div>
                             <button class='addrButton btn btn-primary' style='text-transform: none'>Load it!</button>
                         </div>

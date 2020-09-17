@@ -54,6 +54,10 @@ h6 {
   font-size: 17px;
 }
 
+.note {
+  font-size: 14px;
+}
+
 .panel-title {
   font-size: 23px;
 }
@@ -169,6 +173,10 @@ h6 {
   
   .panel-body {
     font-size: 15px !important;
+  }
+
+  .note {
+    font-size: 12px !important;
   }
 }
 
