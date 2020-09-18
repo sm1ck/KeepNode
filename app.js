@@ -661,6 +661,7 @@ function loadALL() {
             isSlashed(addr).then(t => {
                 showSlash.innerHTML = t ? printDeny() : printOK();
                 if (t) {
+                    // "Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly." - @Antonio in discord
                     // Change to https://github.com/keep-network/keep-core/blob/master/docs/random-beacon/slashing.adoc
                     createNodePunishment("You got slashed!", "When misbehavior is detected without third-party input, a pure slashing penalty is applied. Pure slashing means that the staking contract subtracts the applicable penalty from the operator’s stake and burns tokens equal to the penalty amount. If the operator doesn’t have enough stake for the punishment (e.g. because it has been punished earlier), the punishment is equal to the remaining stake. ECDSA node is punished when trying to perform various bad operations for example the signing group produces an unauthorized signature. See <a href='https://github.com/keep-network/keep-core/blob/master/docs/random-beacon/slashing.adoc#pure-slashing' target='_blank'>docs</a>. You can <a href='checknode.html' target='_blank'>check the availability</a> of your node on the Internet.", 20, "warn");
                 }
@@ -668,8 +669,8 @@ function loadALL() {
             isSeized(addr).then(t => {
                 showSeized.innerHTML = t ? printDeny() : printOK();
                 if (t) {
-                    // "Slashing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the signature process correctly." - @Antonio in discord
                     // "ECDSA keeps if there's proven misbehavior (i.e., the signing group produces an unauthorized signature)." - @Antonio in discord
+                    // Change to https://github.com/keep-network/keep-core/blob/master/docs/random-beacon/slashing.adoc
                     createNodePunishment("You got seized!", "It's a forced seizure of the delegated tokens for various violations. Seizing in the Random Beacon is to all members in the group, as there's no way to know who succeeded or failed to participate in the <a href='https://github.com/keep-network/keep-core/blob/master/docs/random-beacon/signing/index.adoc' target='_blank'>signature process</a> correctly. See <a href='https://github.com/keep-network/keep-core/blob/master/docs/random-beacon/slashing.adoc#seizing' target='_blank'>docs</a>. You can <a href='checknode.html' target='_blank'>check the availability</a> of your node on the Internet.", 20, "warn");
                 }
             });
