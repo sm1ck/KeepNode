@@ -57,6 +57,7 @@ $net = (isset($_GET['mainnet']) && !empty($_GET['mainnet'])) ? $_GET['mainnet'] 
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                 <li class="active"><a href="/">Home</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#flipFlop">Add custom address</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -64,7 +65,6 @@ $net = (isset($_GET['mainnet']) && !empty($_GET['mainnet'])) ? $_GET['mainnet'] 
                     </ul>
                 </li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#flipFlop">Add custom address</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 <li><a href="https://github.com/sm1ck/KeepNode" target="_blank">Github</a></li>
