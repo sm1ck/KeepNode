@@ -3,7 +3,7 @@ Web3 app for checking status of the Keep nodes.
 
 The idea to create this application came to me when I remembered about Google Page Speed service for checking the status of the site. What I liked the most about it is tips for improving your site and show you how many score have your site.
 
-This app uses abi to access smart contracts and displays information about the operator of your node. Connection to the app goes through MetaMask. You can use it in your browser with the extension or in your smartphone through the native MetaMask app.
+This app uses abi to access smart contracts and displays information about the operator of your node. Connection to the app goes through MetaMask or without Web3 provider installed (infura now). You can use it in your browser with the extension or in your smartphone through the native MetaMask app. Also you can add custom operator address througth Menu->"Add custom address".
 
 The app uses accurate data on the required minimum value of unbonded ETH through sortition pools and accurate data on the required minimum value of stake in delegation.
 
